@@ -75,7 +75,59 @@ def actualizar_precio(codigo, nuevo_precio, stock):
         stock[codigo_buscado][0] = nuevo_precio
         return True
     return False   
-     
+
+def validar_codigo_vacio(codigo):
+    return codigo.strip() != ""
+
+def validar_nombre(nombre):
+    return nombre.strip() != ""
+
+def validar_categoria(categoria):
+    return categoria.strip() != ""
+
+def validar_marca(marca):
+    return marca.strip() != ""
+
+def validar_peso(peso_str):
+    try:
+        peso = float(peso_str)
+        return peso > 0
+    except ValueError:
+        return False
+
+def validar_es_importado(opcion):
+    return opcion.lower() in ['s', 'n']
+
+def validar_es_para_cachorro(opcion):
+    return opcion.lower() in ['s', 'n']
+
+def validar_precio(precio_str):
+    try:
+        precio = int(precio_str)
+        return precio > 0
+    except ValueError:
+        return False
+
+def validar_unidades(unidades_str):
+    try:
+        unidades = int(unidades_str)
+        return unidades >= 0
+    except ValueError:
+        return False
+
+def agregar_producto(codigo, nombre, categoria, marca, peso_kg, es_importado, es_para_cachorro, precio, unidades, productos, stock):
+    cod_upper = codigo.upper()
+    
+    if cod_upper in productos or cod_upper in stock:
+        return False
+        
+    importado_bool = True if es_importado.lower() == 's' else False
+    cachorro_bool = True if es_para_cachorro.lower() == 's' else False
+    
+    productos[cod_upper] = [nombre, categoria, marca, float(peso_kg), importado_bool, cachorro_bool]
+    stock[cod_upper] = [int(precio), int(unidades)]
+    return True     
+
 productos = {
     'M001': ['Alimento Premium', 'comida', 'DogPlus', 10, True, False],
     'M002': ['Arena Aglomerante', 'higiene', 'CatClean', 8, False, False],
@@ -148,7 +200,62 @@ while True:
                     break
            
         case 4:
-            print("")
+            print("=== AGREGAR PRODUCTO ===")
+            
+            codigo = input("Ingrese el código del producto: ")
+            if not validar_codigo_vacio(codigo):
+                print("Error: El código no puede estar vacío ni contener solo espacios.")
+                continue 
+
+            nombre = input("Ingrese el nombre del producto: ")
+            if not validar_nombre(nombre):
+                print("Error: El nombre no puede estar vacío.")
+                continue
+
+            categoria = input("Ingrese la categoría: ")
+            if not validar_categoria(categoria):
+                print("Error: La categoría no puede estar vacía.")
+                continue
+
+            marca = input("Ingrese la marca: ")
+            if not validar_marca(marca):
+                print("Error: La marca no puede estar vacía.")
+                continue
+
+            peso_kg = input("Ingrese el peso en kg (mayor a cero): ")
+            if not validar_peso(peso_kg):
+                print("Error: El peso debe ser un número numérico mayor a cero.")
+                continue
+
+            es_importado = input("¿Es importado? (s/n): ")
+            if not validar_es_importado(es_importado):
+                print("Error: Debe ingresar 's' o 'n'.")
+                continue
+
+            es_para_cachorro = input("¿Es para cachorro? (s/n): ")
+            if not validar_es_para_cachorro(es_para_cachorro):
+                print("Error: Debe ingresar 's' o 'n'.")
+                continue
+
+            precio = input("Ingrese el precio (entero mayor a cero): ")
+            if not validar_precio(precio):
+                print("Error: El precio debe ser un número entero mayor a cero.")
+                continue
+
+            unidades = input("Ingrese las unidades (entero mayor o igual a cero): ")
+            if not validar_unidades(unidades):
+                print("Error: Las unidades deben ser un número entero mayor o igual a cero.")
+                continue
+
+            exito = agregar_producto(
+                codigo, nombre, categoria, marca, peso_kg, 
+                es_importado, es_para_cachorro, precio, unidades, 
+                productos, stock
+            )
+            if exito:
+                print("Producto agregado con éxito")
+            else:
+                print("El código ya existe en el sistema. No se pudo registrar.")
             
         case 5:
             print("")
