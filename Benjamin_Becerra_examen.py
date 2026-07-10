@@ -60,7 +60,22 @@ def busqueda_precio(p_min, p_max, productos, stock):
             print(f"- {producto}")
     else:
         print("No hay productos en ese rango de precios.")
-        
+
+def buscar_codigo(codigo, stock):
+    codigo_buscado = codigo.upper()
+    
+    if codigo_buscado in stock:
+        return True
+    return False
+
+def actualizar_precio(codigo, nuevo_precio, stock):
+    codigo_buscado = codigo.upper()
+    
+    if buscar_codigo(codigo_buscado, stock):
+        stock[codigo_buscado][0] = nuevo_precio
+        return True
+    return False   
+     
 productos = {
     'M001': ['Alimento Premium', 'comida', 'DogPlus', 10, True, False],
     'M002': ['Arena Aglomerante', 'higiene', 'CatClean', 8, False, False],
@@ -105,7 +120,32 @@ while True:
             busqueda_precio(precio_minimo, precio_maximo, productos, stock)
             
         case 3:
-            print("")
+            print("=== ACTUALIZAR PRECIO DE PRODUCTO ===")
+            while True:
+                cod_usuario = input("Ingrese el código del producto (ej: M001): ")
+                while True:
+                    try:
+                        precio_input = int(input("Ingrese el nuevo precio (entero positivo): "))
+                        if precio_input > 0:
+                            break 
+                        else:
+                            print("Error: El precio debe ser un valor mayor a cero.")
+                    except ValueError:
+                        print("Debe ingresar un número entero válido.")
+                
+                fue_actualizado = actualizar_precio(cod_usuario, precio_input, stock)
+                
+                if fue_actualizado:
+                    print("¡Precio actualizado con éxito!")
+                else:
+                    print("El código no existe.")
+                repetir = input("¿Desea actualizar otro precio (s/n)?: ").lower()
+                
+                if repetir == 'n':
+                    break
+                elif repetir != 's':
+                    print("Opción no válida. Volviendo al menú principal por defecto.")
+                    break
            
         case 4:
             print("")
