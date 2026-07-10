@@ -127,6 +127,15 @@ def agregar_producto(codigo, nombre, categoria, marca, peso_kg, es_importado, es
     productos[cod_upper] = [nombre, categoria, marca, float(peso_kg), importado_bool, cachorro_bool]
     stock[cod_upper] = [int(precio), int(unidades)]
     return True     
+def eliminar_producto(codigo, productos, stock):
+    codigo_buscado = codigo.upper()
+    
+    if buscar_codigo(codigo_buscado, stock):
+
+        del productos[codigo_buscado]
+        del stock[codigo_buscado]
+        return True
+    return False
 
 productos = {
     'M001': ['Alimento Premium', 'comida', 'DogPlus', 10, True, False],
@@ -258,8 +267,20 @@ while True:
                 print("El código ya existe en el sistema. No se pudo registrar.")
             
         case 5:
-            print("")
+            print("=== ELIMINAR PRODUCTO ===")
+            
+            cod_eliminar = input("Ingrese el código del producto que desea eliminar (ej: M001): ")
+            
+            fue_eliminado = eliminar_producto(cod_eliminar, productos, stock)
+            
+            if fue_eliminado:
+                print("Producto eliminado con éxito")
+            else:
+                print("El código no existe.")
             
         case 6:
-            print("")
+            print("Programa finalizado.")
             break
+
+        case _:
+            print("Error: Opcion no valida intente denuevo")
